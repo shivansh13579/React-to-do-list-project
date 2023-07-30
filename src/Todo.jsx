@@ -68,8 +68,10 @@ function Todo() {
             {todos.map((todo)=>(
                 <li key={todo.id}>
                     {todo.text}
+                    <div>
                     <button onClick={()=>deleteTodo(todo.id)}>Delete</button>
                     <button onClick={()=>enterEditMode(todo.id,todo.text)}>Edit</button>
+                    </div>
                 </li>
             ))}
         </ul>
