@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
+import './Todo.css';
 
 function Todo() {
     const [todos,setTodos] = useState([]);
     const [inputValue,setInputValue] = useState('');
+
+    const [editMode,setEditMode] = useState(false);
+    const [editId,setEditId] = useState(null);
+    const [editValue,setEditValue] = useState('');
 
     const addTodo =()=>{
         if(inputValue.trim()!==''){
@@ -20,17 +25,51 @@ function Todo() {
         const updateTodo = todos.filter((todo)=>todo.id != id);
         setTodos(updateTodo)
     }
+
+    const enterEditMode =(id,text)=>{
+        setEditMode(true);
+        setEditId(id);
+        setEditValue(text);
+    }
+
+    const updateTodo =()=>{
+        const updatedTodos = todos.map((todo)=>{
+            if(todo.id === editId){
+                return {...todo,text:editValue};
+            }
+            return todo;
+        });
+
+        setTodos(updatedTodos);
+        setEditMode(false);
+        setEditId(null);
+        setEditValue('');
+    }
   return (
     <div>
       <div className='todo-container'>
         <h2>ToDo List</h2>
-        <input type="text" value={inputValue}  onChange={(e)=>setInputValue(e.target.value)}/>
-        <button onClick={addTodo}>Add</button>
+        <input type="text"
+         value={inputValue} 
+          onChange={(e)=>setInputValue
+          (e.target.value)}/>
+        {
+            editMode ?(
+                <div>
+                    <input type="text" value={editValue} onChange={(e)=>setEditValue(e.target.value)}/>
+                    <button onClick={updateTodo}>Update</button>
+                </div>
+            ):(
+           <button onClick={addTodo}>Add</button>
+            )
+        }
+      
         <ul>
             {todos.map((todo)=>(
                 <li key={todo.id}>
                     {todo.text}
                     <button onClick={()=>deleteTodo(todo.id)}>Delete</button>
+                    <button onClick={()=>enterEditMode(todo.id,todo.text)}>Edit</button>
                 </li>
             ))}
         </ul>
